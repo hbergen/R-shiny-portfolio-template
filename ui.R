@@ -13,8 +13,8 @@ library(DT)
 # http://shiny.rstudio.com/articles/layout-guide.html
 
 # PANEL - ABOUT ME CONTENT 
-about <- tabPanel( title = "Home"
-                   # , includeCSS("www/css/grayscale.css")
+home <- tabPanel( title = "Home"
+                    , includeCSS("www/css/bootstrap.css")
                     , mainPanel( h1("About this project")
                                   , br()
                                   , HTML("<p>Hello, World!
@@ -26,30 +26,22 @@ about <- tabPanel( title = "Home"
                       )
           )
 
-# PANEL - DEMO 1 
-A_results <- tabPanel( title = "results"
-                    , mainPanel(
-                        selectInput("dataset", "Choose a dataset:" 
-                                     , choices = c("rock", "pressure", "cars") )
-                        , downloadButton('downloadData', 'CSV')
-                        , downloadButton('downloadPlot', 'PNG')
-                        , plotOutput('plot')
-                      )
-        )
 
-
-# PANEL - DEMO 1
+# NAVBAR 1 - PROJECT A BACKGROUND
 A_background <- tabPanel( title = "background"
                     , mainPanel("Project A background") 
          )
 
-# PANEL - DEMO 2
-# Store pages in separate markdown documents to keep folders tidy
-B_background <- tabPanel( title = "Project B background"
-                             , mainPanel( includeMarkdown("B_background.Rmd" ) )
+
+# NAVBAR 1 - PROJECT A DATA TABLE DISPLAY
+A_data <- tabPanel( title = "data"
+                    , mainPanel(selectInput("dataset", "Choose a dataset:" 
+                                            , choices = c("rock", "pressure", "cars") )
+                                , DT::dataTableOutput('mytable'))
 )
 
-# PANEL - METHODS
+
+# NAVBAR 1 - PROJECT A METHODS
 A_methods <- tabPanel( title = "methods"
                       , mainPanel( withMathJax()
                                    , helpText('R Shiny supports MathJax integration:
@@ -59,13 +51,25 @@ A_methods <- tabPanel( title = "methods"
                         )
            )
 
+# NAVBAR 1 - PROJECT A RESULTS
+A_results <- tabPanel( title = "results"
+                       , mainPanel(
+                         selectInput("plotdata", "Choose a dataset:" 
+                                     , choices = c("rock", "pressure", "cars") )
+                         , downloadButton('downloadData', 'CSV')
+                         , downloadButton('downloadPlot', 'PNG')
+                         , plotOutput('plot')
+                       )
+)
 
-# PANEL - DATA FOR DASHBOARD
-A_data <- tabPanel( title = "data"
-                    , mainPanel(selectInput("dataset", "Choose a dataset:" 
-                                            , choices = c("rock", "pressure", "cars") )
-                                , DT::dataTableOutput('mytable'))
-          )
+
+# NAVBAR 2 - PROJECT B
+# Store pages in separate markdown documents to keep folders tidy
+B_background <- tabPanel( title = "Project B background"
+                          , mainPanel( includeMarkdown("B_background.Rmd" ) )
+)
+
+
 
 resources <- tabPanel( title = "resources"
                        , mainPanel("Page for references, articles, list of packages used, ...")
@@ -74,7 +78,7 @@ resources <- tabPanel( title = "resources"
 # PUT EVERYTHING TOGETHER
 shinyUI(  
           navbarPage(  title = div( "Shiny Portfolio" )
-                         , about
+                         , home
                          , navbarMenu( title = "project A"
                                         , A_background
                                         , A_data
@@ -83,7 +87,7 @@ shinyUI(
                          , navbarMenu( title= "project B"
                                       , B_background)
                          , resources
-                         , theme = "www/css/grayscale.css" #modified flatly theme
+                      #   , theme = "www/css/bootstrap.css" #modified flatly theme
                          , windowTitle = "A demo project"
           )
        )

@@ -16,10 +16,19 @@ shinyServer(function(input, output) {
                 , "cars" = cars )
     } 
   )
+  
+  plotdataInput <- reactive( {
+    switch( input$plotdata
+            , "rock" = rock
+            , "pressure" = pressure
+            , "cars" = cars )
+  } 
+  )
+  
   # reactive plot based on user selection from datasetInput
   plotInput <- reactive( {
-      df <- datasetInput()
-      p  <-ggplot( df, aes_string(x=names(df)[1], y=names(df)[2] )  
+      df <- plotdataInput()
+      p  <- ggplot( df, aes_string(x=names(df)[1], y=names(df)[2] )  
                  )  + geom_point() 
     } 
   )
@@ -29,6 +38,7 @@ shinyServer(function(input, output) {
     print( plotInput() )
     } 
   )
+  
   #### download data selection as csv
   output$downloadData <- downloadHandler(
       filename = function() { paste(input$dataset, '.csv', sep='') }
@@ -36,9 +46,10 @@ shinyServer(function(input, output) {
                   write.csv(datasetInput(), file)
                 }
   )
+  
   #### download plot selection as png
   output$downloadPlot <- downloadHandler(
-      filename = function() { paste(input$dataset, '.png', sep='') }
+      filename = function() { paste(input$plotdata, '.png', sep='') }
     , content  = function(file) {
                     ggsave(file, plot = plotInput() )
                   }
